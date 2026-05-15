@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Viagens & Co. — Planeamento de Viagens</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sand: #f5f0e8;
+      --ink: #1a1a18;
+      --stone: #7a7570;
+      --warm: #c8a96e;
+      --light: #fdfbf7;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--light);
+      color: var(--ink);
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 4rem;
+      background: rgba(253,251,247,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(26,26,24,0.08);
+    }
+
+    .logo {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      color: var(--ink);
+    }
+
+    .logo svg {
+      height: 44px;
+      width: auto;
+      display: block;
+    }
+
+    footer .logo svg,
+    .footer-logo svg {
+      height: 38px;
+      color: rgba(253,251,247,0.75);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    nav ul a {
+      text-decoration: none;
+      color: var(--stone);
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav ul a:hover { color: var(--ink); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 8rem 2rem 5rem;
+      background: var(--light);
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 70% 30%, rgba(200,169,110,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 20% 80%, rgba(200,169,110,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--warm);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      max-width: 14ch;
+      margin: 0 auto 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.35s forwards;
+    }
+
+    .hero h1 em { font-style: italic; color: var(--warm); }
+
+    .hero p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--stone);
+      max-width: 42ch;
+      margin: 0 auto 3rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.5s forwards;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.65s forwards;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--light);
+      padding: 0.9rem 2.2rem;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover { background: var(--warm); transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--ink);
+      padding: 0.9rem 2.2rem;
+      border: 1px solid rgba(26,26,24,0.3);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .btn-outline:hover { border-color: var(--ink); transform: translateY(-1px); }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--stone);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 1s 1.2s forwards;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--warm), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ── SERVIÇOS ── */
+    #servicos {
+      padding: 7rem 2rem;
+      background: var(--sand);
+    }
+
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--warm);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300;
+      text-align: center;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      color: var(--ink);
+    }
+
+    .section-title em { font-style: italic; color: var(--warm); }
+
+    .section-sub {
+      text-align: center;
+      color: var(--stone);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      max-width: 50ch;
+      margin: 0 auto 4rem;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .service-item {
+      padding: 1.8rem;
+      background: var(--light);
+      border: 1px solid rgba(26,26,24,0.06);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .service-item:hover { border-color: var(--warm); transform: translateY(-2px); }
+
+    .service-icon { font-size: 1.5rem; margin-bottom: 1rem; }
+
+    .service-item h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+
+    .service-item p { font-size: 0.83rem; color: var(--stone); line-height: 1.65; }
+
+    /* ── COMO FUNCIONA — TIMELINE ── */
+    #como-funciona {
+      padding: 7rem 2rem;
+      background: var(--light);
+    }
+
+    .timeline-wrap {
+      max-width: 860px;
+      margin: 4rem auto 0;
+      position: relative;
+    }
+
+    .timeline-wrap::before {
+      content: '';
+      position: absolute;
+      left: 28px;
+      top: 12px;
+      bottom: 12px;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--warm), rgba(200,169,110,0.1));
+    }
+
+    .tl-step {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 2rem;
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .tl-step.visible { opacity: 1; transform: translateY(0); }
+    .tl-step:last-child { margin-bottom: 0; }
+
+    .tl-marker {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 4px;
+    }
+
+    .tl-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--light);
+      border: 2px solid var(--warm);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      transition: background 0.3s;
+    }
+
+    .tl-step:hover .tl-dot { background: var(--warm); }
+
+    .tl-body { padding-bottom: 0.5rem; }
+
+    .tl-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .tl-num {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--warm);
+    }
+
+    .tl-tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--stone);
+      background: var(--sand);
+      padding: 0.2rem 0.6rem;
+    }
+
+    .tl-body h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 0.7rem;
+      line-height: 1.2;
+    }
+
+    .tl-body p { font-size: 0.92rem; color: var(--stone); line-height: 1.8; max-width: 56ch; }
+
+    .tl-detail {
+      margin-top: 1rem;
+      padding: 1rem 1.2rem;
+      background: var(--sand);
+      border-left: 2px solid var(--warm);
+    }
+
+    .tl-detail ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+
+    .tl-detail ul li {
+      font-size: 0.83rem;
+      color: var(--stone);
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .tl-detail ul li::before { content: '—'; position: absolute; left: 0; color: var(--warm); }
+
+    /* ── FAQ ── */
+    #faq {
+      padding: 5rem 2rem;
+      background: var(--sand);
+    }
+
+    .faq-inner { max-width: 700px; margin: 0 auto; }
+
+    .faq-item { border-bottom: 1px solid rgba(26,26,24,0.1); }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 1.3rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: var(--ink);
+      text-align: left;
+      gap: 1rem;
+    }
+
+    .faq-icon {
+      width: 20px; height: 20px;
+      flex-shrink: 0;
+      color: var(--warm);
+      transition: transform 0.3s;
+    }
+
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s; }
+
+    .faq-item.open .faq-answer { max-height: 200px; padding-bottom: 1.2rem; }
+
+    .faq-answer p { font-size: 0.88rem; color: var(--stone); line-height: 1.8; }
+
+    /* ── CTA / CONTACTO ── */
+    #contacto {
+      padding: 7rem 2rem;
+      background: var(--ink);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #contacto::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(200,169,110,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--warm); margin-bottom: 1rem; }
+
+    .cta-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 300;
+      color: var(--light);
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .cta-title em { font-style: italic; color: var(--warm); }
+
+    .cta-sub {
+      font-size: 0.95rem;
+      color: rgba(253,251,247,0.5);
+      line-height: 1.8;
+      max-width: 44ch;
+      margin: 0 auto 3rem;
+    }
+
+    .call-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.9rem;
+      background: var(--warm);
+      color: var(--ink);
+      padding: 1.1rem 2.8rem;
+      text-decoration: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .call-btn:hover {
+      background: #d4b87a;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(200,169,110,0.25);
+    }
+
+    .call-btn:active { transform: translateY(0); }
+
+    .call-btn svg {
+      width: 20px; height: 20px;
+      animation: ring 2.5s ease-in-out infinite;
+    }
+
+    .phone-number-display {
+      margin-top: 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: rgba(253,251,247,0.35);
+      letter-spacing: 0.1em;
+    }
+
+    .hours-note {
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: rgba(253,251,247,0.25);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #111110;
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    footer .logo { font-size: 1.1rem; color: rgba(253,251,247,0.7); }
+    footer p { font-size: 0.75rem; color: rgba(253,251,247,0.3); letter-spacing: 0.05em; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 1; }
+    }
+
+    @keyframes ring {
+      0%, 100% { transform: rotate(0deg); }
+      10%       { transform: rotate(-15deg); }
+      20%       { transform: rotate(15deg); }
+      30%       { transform: rotate(-10deg); }
+      40%       { transform: rotate(10deg); }
+      50%       { transform: rotate(0deg); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      nav ul { display: none; }
+      .timeline-wrap::before { left: 20px; }
+      .tl-step { grid-template-columns: 44px 1fr; gap: 1rem; }
+      footer { padding: 1.5rem; flex-direction: column; text-align: center; }
+    }
+
+    /* ── AI BADGE ── */
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--stone);
+      background: var(--sand);
+      border: 1px solid rgba(200,169,110,0.3);
+      padding: 0.3rem 0.75rem;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.1s forwards;
+    }
+
+    .ai-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--warm);
+      animation: aipulse 2s ease-in-out infinite;
+    }
+
+    @keyframes aipulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* ── VAPI CALL BUTTON STATES ── */
+    .call-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--warm);
+      color: var(--light);
+      border: none;
+      padding: 1.1rem 2.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .call-btn:hover { background: #b8955a; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(200,169,110,0.3); }
+    .call-btn:disabled, .call-btn.connecting { background: var(--stone); pointer-events: none; cursor: default; }
+    .call-btn.active { background: #c0392b; animation: callglow 1.5s ease-in-out infinite; }
+    .call-btn.active:hover { background: #a93226; }
+
+    @keyframes callglow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.5); }
+      50%       { box-shadow: 0 0 0 10px rgba(192,57,43,0); }
+    }
+
+    .call-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .call-status {
+      margin-top: 1rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(253,251,247,0.4);
+      min-height: 1.2em;
+      transition: color 0.3s;
+    }
+
+    .call-status.active { color: var(--warm); }
+
+    .dots::after {
+      content: '';
+      animation: dotanim 1.2s steps(4, end) infinite;
+    }
+    @keyframes dotanim {
+      0%  { content: ''; }   25% { content: '.'; }
+      50% { content: '..'; } 75% { content: '...'; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="logo" aria-label="Viagens & Co.">
+    <svg viewBox="0 0 220 52" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Viagens & Co.">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400&amp;family=DM+Sans:wght@300&amp;display=swap');
+    </style>
+  </defs>
+
+  <!-- Mark: compass circle with meridian arcs -->
+  <!-- Outer thin circle -->
+  <circle cx="26" cy="26" r="22" stroke="currentColor" stroke-width="0.8" fill="none" opacity="0.7"/>
+
+  <!-- Horizontal meridian -->
+  <line x1="4" y1="26" x2="48" y2="26" stroke="currentColor" stroke-width="0.6" opacity="0.4"/>
+
+  <!-- Vertical meridian -->
+  <line x1="26" y1="4" x2="26" y2="48" stroke="currentColor" stroke-width="0.6" opacity="0.4"/>
+
+  <!-- Diagonal meridian arc suggestion — two small ellipses to suggest globe -->
+  <ellipse cx="26" cy="26" rx="10" ry="22" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.35"/>
+
+  <!-- Cardinal tick marks -->
+  <line x1="26" y1="4"  x2="26" y2="8"  stroke="currentColor" stroke-width="1.2"/>
+  <line x1="26" y1="44" x2="26" y2="48" stroke="currentColor" stroke-width="1.2"/>
+  <line x1="4"  y1="26" x2="8"  y2="26" stroke="currentColor" stroke-width="1.2"/>
+  <line x1="44" y1="26" x2="48" y2="26" stroke="currentColor" stroke-width="1.2"/>
+
+  <!-- Central diamond needle -->
+  <polygon points="26,19 29,26 26,33 23,26" fill="currentColor" opacity="0.9"/>
+
+  <!-- Wordmark -->
+  <!-- "Viagens" in Cormorant italic -->
+  <text
+    x="62" y="24"
+    font-family="'Cormorant Garamond', Georgia, serif"
+    font-style="italic"
+    font-weight="300"
+    font-size="20"
+    fill="currentColor"
+    letter-spacing="1.5"
+  >Viagens</text>
+
+  <!-- Thin rule below Viagens -->
+  <line x1="62" y1="29" x2="214" y2="29" stroke="currentColor" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- "& Co." in DM Sans light small caps -->
+  <text
+    x="63" y="42"
+    font-family="'DM Sans', Arial, sans-serif"
+    font-weight="300"
+    font-size="8.5"
+    fill="currentColor"
+    letter-spacing="5"
+    opacity="0.75"
+  >&#38; CO.</text>
+</svg>
+  </a>
+    <ul>
+      <li><a href="#servicos">Serviços</a></li>
+      <li><a href="#como-funciona">Como funciona</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <div>
+      <p class="hero-tag">Planeamento personalizado de viagens</p>
+      <div class="ai-badge">Agente virtual com IA · Disponível 24h</div>
+      <h1>A viagem <em>perfeita</em> começa aqui</h1>
+      <p>Tratamos de tudo — voos, hotéis, experiências e itinerários — para que só te preocupes em desfrutar.</p>
+      <div class="hero-cta">
+        <a href="#como-funciona" class="btn-primary">Como funciona</a>
+        <a href="#contacto" class="btn-outline">Falar com o agente</a>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ══ SERVIÇOS ══ -->
+  <section id="servicos">
+    <div class="section-inner">
+      <p class="section-label">O que incluímos</p>
+      <h2 class="section-title">Tudo tratado <em>por nós</em></h2>
+      <p class="section-sub">Do início ao fim, gerimos cada detalhe para que a tua viagem seja verdadeiramente inesquecível.</p>
+      <div class="services-grid">
+        <div class="service-item">
+          <div class="service-icon">✈️</div>
+          <h4>Voos</h4>
+          <p>Pesquisamos as melhores opções de voo, diretos ou com escala, nas melhores companhias aéreas.</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon">🏨</div>
+          <h4>Alojamento</h4>
+          <p>Hotéis, resorts, apartamentos ou casas rurais — selecionamos o alojamento ideal para o teu estilo.</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon">🗺️</div>
+          <h4>Itinerários</h4>
+          <p>Criamos roteiros detalhados dia a dia, para aproveitares ao máximo cada momento da viagem.</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon">🚗</div>
+          <h4>Transfers</h4>
+          <p>Organizamos transporte do aeroporto, aluguer de carro e deslocações entre destinos.</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon">🎟️</div>
+          <h4>Experiências</h4>
+          <p>Reservamos tours, experiências gastronómicas, actividades de aventura e muito mais.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ COMO FUNCIONA — TIMELINE ══ -->
+  <section id="como-funciona">
+    <div class="section-inner">
+      <p class="section-label">O processo</p>
+      <h2 class="section-title">Como <em>funciona</em> o planeamento</h2>
+      <p class="section-sub">Do primeiro contacto à partida, acompanhamos-te em cada passo para que não te preocupes com nada.</p>
+
+      <div class="timeline-wrap">
+
+        <div class="tl-step">
+          <div class="tl-marker"><div class="tl-dot"></div></div>
+          <div class="tl-body">
+            <div class="tl-meta"><span class="tl-num">Passo 01</span><span class="tl-tag">Início</span></div>
+            <h3>Conta-nos o que sonhas</h3>
+            <p>Tudo começa com uma simples chamada. Diz-nos o destino que tens em mente, as datas, quem viaja e o teu orçamento. Não precisas de ter nada definido — estamos aqui para ajudar a construir a ideia desde o início.</p>
+            <div class="tl-detail">
+              <ul>
+                <li>Destino ou região de interesse</li>
+                <li>Datas aproximadas e duração</li>
+                <li>Número de viajantes (adultos, crianças)</li>
+                <li>Orçamento disponível</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-step">
+          <div class="tl-marker"><div class="tl-dot"></div></div>
+          <div class="tl-body">
+            <div class="tl-meta"><span class="tl-num">Passo 02</span><span class="tl-tag">Proposta</span></div>
+            <h3>Criamos a tua proposta</h3>
+            <p>Com base no que nos disseste, o agente pesquisa e elabora um itinerário personalizado com sugestões de voos, alojamento, actividades e logística. Receves uma proposta clara e detalhada, sem letras pequenas.</p>
+            <div class="tl-detail">
+              <ul>
+                <li>Opções de voo com preços comparados</li>
+                <li>Alojamento selecionado ao teu perfil</li>
+                <li>Itinerário dia a dia com sugestões</li>
+                <li>Estimativa total de custos</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-step">
+          <div class="tl-marker"><div class="tl-dot"></div></div>
+          <div class="tl-body">
+            <div class="tl-meta"><span class="tl-num">Passo 03</span><span class="tl-tag">Ajustes</span></div>
+            <h3>Afinamos juntos os detalhes</h3>
+            <p>Analisas a proposta com calma e dizes-nos o que queres mudar. Mais dias? Outro hotel? Um voo diferente? Fazemos todos os ajustes necessários até a viagem ficar exatamente como imaginavas.</p>
+          </div>
+        </div>
+
+        <div class="tl-step">
+          <div class="tl-marker"><div class="tl-dot"></div></div>
+          <div class="tl-body">
+            <div class="tl-meta"><span class="tl-num">Passo 04</span><span class="tl-tag">Reservas</span></div>
+            <h3>Tratamos de tudo por ti</h3>
+            <p>Assim que aprovares, avançamos com todas as reservas. Voos, hotéis, transfers, experiências — confirmamos tudo e enviamos-te a documentação organizada num único documento fácil de consultar.</p>
+            <div class="tl-detail">
+              <ul>
+                <li>Confirmação de todas as reservas</li>
+                <li>Vouchers e bilhetes enviados por email</li>
+                <li>Guia de viagem personalizado</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-step">
+          <div class="tl-marker"><div class="tl-dot"></div></div>
+          <div class="tl-body">
+            <div class="tl-meta"><span class="tl-num">Passo 05</span><span class="tl-tag">Apoio</span></div>
+            <h3>Estamos contigo durante a viagem</h3>
+            <p>Enquanto viajas, tens sempre o número do nosso agente disponível. Se surgir algum imprevisto — voo atrasado, alteração de reserva, qualquer dúvida — estamos a um telefonema de distância.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FAQ ══ -->
+  <section id="faq">
+    <div class="faq-inner">
+      <p class="section-label">Perguntas frequentes</p>
+      <h2 class="section-title" style="text-align:center; margin-bottom:3rem;">Tens <em>dúvidas?</em></h2>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Quanto tempo demora a receber a proposta?
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-answer"><p>Normalmente entregamos a proposta em 24 a 48 horas após o primeiro contacto, dependendo da complexidade da viagem.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          O serviço de planeamento tem custos?
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-answer"><p>O nosso serviço de planeamento e acompanhamento é gratuito. A nossa comissão está incluída nos preços das reservas que fazemos por ti.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Posso cancelar ou alterar a viagem depois de reservar?
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-answer"><p>Sim. Gerimos todas as alterações e cancelamentos por ti, sempre de acordo com as políticas dos fornecedores. Informamos-te sempre das condições antes de confirmar qualquer reserva.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Trabalham com destinos fora da Europa?
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-answer"><p>Sim, planeamos viagens para qualquer parte do mundo. Desde uma escapadinha europeia a uma grande aventura intercontinental.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CONTACTO / CTA ══ -->
+  <section id="contacto">
+    <p class="cta-label">Pronto para começar?</p>
+    <h2 class="cta-title">Fala com o<br><em>nosso agente</em></h2>
+    <p class="cta-sub">Uma chamada é tudo o que precisas para começar a planear a viagem dos teus sonhos.</p>
+
+    <a href="tel:+13439445527" class="call-btn" id="callBtn" onclick="startVapiCall(event)">
+      <svg id="callIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+      </svg>
+      <span id="callLabel">Ligar agora</span>
+    </a>
+    <p class="call-status" id="callStatus"></p>
+
+    <p class="phone-number-display">+1 (343) 944-5527</p>
+    <p class="hours-note">Segunda a Sábado · 9h – 19h</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="#" class="logo footer-logo" aria-label="Viagens & Co.">
+    <svg viewBox="0 0 220 52" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Viagens & Co.">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400&amp;family=DM+Sans:wght@300&amp;display=swap');
+    </style>
+  </defs>
+
+  <!-- Mark: compass circle with meridian arcs -->
+  <!-- Outer thin circle -->
+  <circle cx="26" cy="26" r="22" stroke="currentColor" stroke-width="0.8" fill="none" opacity="0.7"/>
+
+  <!-- Horizontal meridian -->
+  <line x1="4" y1="26" x2="48" y2="26" stroke="currentColor" stroke-width="0.6" opacity="0.4"/>
+
+  <!-- Vertical meridian -->
+  <line x1="26" y1="4" x2="26" y2="48" stroke="currentColor" stroke-width="0.6" opacity="0.4"/>
+
+  <!-- Diagonal meridian arc suggestion — two small ellipses to suggest globe -->
+  <ellipse cx="26" cy="26" rx="10" ry="22" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.35"/>
+
+  <!-- Cardinal tick marks -->
+  <line x1="26" y1="4"  x2="26" y2="8"  stroke="currentColor" stroke-width="1.2"/>
+  <line x1="26" y1="44" x2="26" y2="48" stroke="currentColor" stroke-width="1.2"/>
+  <line x1="4"  y1="26" x2="8"  y2="26" stroke="currentColor" stroke-width="1.2"/>
+  <line x1="44" y1="26" x2="48" y2="26" stroke="currentColor" stroke-width="1.2"/>
+
+  <!-- Central diamond needle -->
+  <polygon points="26,19 29,26 26,33 23,26" fill="currentColor" opacity="0.9"/>
+
+  <!-- Wordmark -->
+  <!-- "Viagens" in Cormorant italic -->
+  <text
+    x="62" y="24"
+    font-family="'Cormorant Garamond', Georgia, serif"
+    font-style="italic"
+    font-weight="300"
+    font-size="20"
+    fill="currentColor"
+    letter-spacing="1.5"
+  >Viagens</text>
+
+  <!-- Thin rule below Viagens -->
+  <line x1="62" y1="29" x2="214" y2="29" stroke="currentColor" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- "& Co." in DM Sans light small caps -->
+  <text
+    x="63" y="42"
+    font-family="'DM Sans', Arial, sans-serif"
+    font-weight="300"
+    font-size="8.5"
+    fill="currentColor"
+    letter-spacing="5"
+    opacity="0.75"
+  >&#38; CO.</text>
+</svg>
+  </a>
+    <p>© 2026 Viagens &amp; Co. · Todos os direitos reservados</p>
+  </footer>
+
+  <!-- Vapi Web SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@vapi-ai/web@latest/dist/vapi.iife.js"></script>
+
+  <script>
+    // ─────────────────────────────────────────────
+    // VAPI CONFIG — preenche com os teus valores
+    // ─────────────────────────────────────────────
+    const VAPI_PUBLIC_KEY  = 'COLOCA_AQUI_A_TUA_PUBLIC_KEY';   // dashboard.vapi.ai → Account
+    const VAPI_ASSISTANT_ID = 'COLOCA_AQUI_O_ASSISTANT_ID';    // dashboard.vapi.ai → Assistants
+    // ─────────────────────────────────────────────
+
+    let vapi = null;
+    let callActive = false;
+
+    function getVapi() {
+      if (!vapi && window.Vapi) {
+        vapi = new window.Vapi(VAPI_PUBLIC_KEY);
+
+        vapi.on('call-start',  () => setCallState('active'));
+        vapi.on('call-end',    () => setCallState('idle'));
+        vapi.on('error',       (e) => { console.error(e); setCallState('idle'); });
+      }
+      return vapi;
+    }
+
+    function setCallState(state) {
+      const btn    = document.getElementById('callBtn');
+      const label  = document.getElementById('callLabel');
+      const status = document.getElementById('callStatus');
+      const icon   = document.getElementById('callIcon');
+
+      if (state === 'connecting') {
+        btn.classList.add('connecting');
+        btn.classList.remove('active');
+        label.textContent = 'A ligar';
+        status.className = 'call-status active dots';
+        status.textContent = 'A conectar';
+        callActive = false;
+      } else if (state === 'active') {
+        btn.classList.remove('connecting');
+        btn.classList.add('active');
+        label.textContent = 'Terminar chamada';
+        status.className = 'call-status active';
+        status.textContent = 'Em chamada — agente disponível';
+        // swap to stop icon
+        icon.innerHTML = '<rect x="4" y="4" width="16" height="16" rx="2" fill="currentColor"/>';
+        callActive = true;
+      } else {
+        btn.classList.remove('connecting', 'active');
+        label.textContent = 'Ligar agora';
+        status.className = 'call-status';
+        status.textContent = '';
+        icon.innerHTML = '<path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>';
+        callActive = false;
+      }
+    }
+
+    function startVapiCall(e) {
+      e.preventDefault();
+
+      // Se keys não estiverem preenchidas, fallback para tel:
+      if (VAPI_PUBLIC_KEY === 'COLOCA_AQUI_A_TUA_PUBLIC_KEY') {
+        window.location.href = 'tel:+13439445527';
+        return;
+      }
+
+      if (callActive) {
+        // Terminar chamada
+        getVapi()?.stop();
+        return;
+      }
+
+      setCallState('connecting');
+      try {
+        getVapi().start(VAPI_ASSISTANT_ID);
+      } catch(err) {
+        console.error(err);
+        setCallState('idle');
+      }
+    }
+
+    // Timeline scroll animation
+    const steps = document.querySelectorAll('.tl-step');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 120);
+        }
+      });
+    }, { threshold: 0.15 });
+    steps.forEach(s => observer.observe(s));
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+  </script>
+
+</body>
+</html>
